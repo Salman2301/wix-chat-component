@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App test</title>
+    <style>
+        
+        .container {
+            height: 400px;
+            background-color: rgba(0,0,0,0);
+            overflow: overlay;
+            display: block;
+        }
+        .message {
+            width: 90%;
+            display: inline-flex;
+            margin: 0px 10px;
+        }
+        .message:hover .timeAgo {
+            visibility: visible;
+        }
+        .message-head {
+            text-align: center;
+            width: 15%;
+            margin: 10px;
+        }
+        .message-body {
+            padding: 0px 10px;
+            width: 85%;
+            min-height: 60px;
+            background: #ebe7e7;
+            margin: 10px 0px;
+            border: 1px solid #ccc;
+            border-radius: 15px;
+        }
+        .username {
+            margin: 0px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .timeAgo {
+            color: #ccc;
+            margin: 0px;
+            visibility: hidden;
+        }
+
+        .alter > .message-body {
+            background-color: #1a73e8;
+            color: white;
+            direction: ltr;
+        }
+
+        .alter {
+            direction: rtl;
+            float: right;
+        }
+
+        .text-msg{
+            margin: 0px;
+            padding:0.2rem;
+        }
+
+        .avatar {
+            border-radius: 50%;
+            /* position: relative; */
+            width: 35px;
+        }
+
+
+
+
+        .message-container{
+            width: 600px;
+            position: absolute;
+            margin: auto;
+            left: calc(50vw - 300px);
+        }
+    </style>
+</head>
+<body>
+    <div class="message-container">
+        <div class="container">
+            <div class="message">
+                <div class="message-head">
+                    <img class="avatar" src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar">
+                    <p class="username">You</p>
+                    
+                </div>
+                <div class="message-body">
+                    <p class="timeAgo">today</p>
+                    <p class="text-msg">Hello there.!! How are you?</p>
+                </div>
+            </div>
+            <div class="message">
+                <div class="message-head">
+                    <img class="avatar" src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar">
+                    <p class="username">You</p>
+                    
+                </div>
+                <div class="message-body">
+                    <p class="timeAgo">today</p>
+                    <p class="text-msg">Hello there.!! How are you?. Hello there.!! How are you? Hello there.!! How are you? Hello there.!! How are you?Hello there.!! How are you?Hello there.!! How are you?Hello there.!! How are you?Hello there.!! How are you?Hello there.!! How are you? Hello there.!! How are you?</p>
+                </div>
+            </div>
+            <div class="message alter">
+                <div class="message-head">
+                    <img class="avatar" src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar">
+                    <p class="username">You</p>
+                    
+                </div>
+                <div class="message-body">
+                    <p class="timeAgo">today</p>
+                    <p class="text-msg">Hello there.!! How are you?</p>
+                </div>
+            </div>
+            <div class="message">
+                <div class="message-head">
+                    <img class="avatar" src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar">
+                    <p class="username">You</p>
+                    
+                </div>
+                <div class="message-body">
+                    <p class="timeAgo">today</p>
+                    <p class="text-msg">Hello there.!! How are you?</p>
+                </div>
+            </div>
+            <div class="message alter">
+                <div class="message-head">
+                    <img class="avatar" src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar">
+                    <p class="username">You</p>
+                    
+                </div>
+                <div class="message-body">
+                    <p class="timeAgo">today</p>
+                    <p class="text-msg">Hello there.!! How are you?</p>
+                </div>
+            </div>
+            <div class="message alter">
+                <div class="message-head">
+                    <img class="avatar" src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar">
+                    <p class="username">You</p>
+                    
+                </div>
+                <div class="message-body">
+                    <p class="timeAgo">today</p>
+                    <p class="text-msg">Hello there.!! How are you?</p>
+                </div>
+            </div>
+            <div class="message">
+                <div class="message-head">
+                    <img class="avatar" src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar">
+                    <p class="username">You</p>
+                    
+                </div>
+                <div class="message-body">
+                    <p class="timeAgo">today</p>
+                    <p class="text-msg">Hello there.!! How are you?</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <script src="./wix-chat.js"></script> -->
+</body>
+</html>

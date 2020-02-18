@@ -185,7 +185,7 @@ class MessagesComponent extends HTMLElement {
         console.log('disconnected!');
         clearInterval(this.interval);
     }
-    static get observedAttributes() {return ['append-msg', "messages"]; }
+    static get observedAttributes() {return ['append-msg', 'append-msgs', 'prepend-msg', 'prepend-msgs', "messages"]; }
 
 
 	attributeChangedCallback(attr, oldValue, newValue) {

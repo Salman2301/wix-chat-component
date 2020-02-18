@@ -1,6 +1,7 @@
 // time ago 
-import("https://unpkg.com/timeago.js@4.0.2/dist/timeago.min.js")
-
+import * as timeago from "./timeago.js";
+// wix public location
+// import * as timeago from "public/custom-elements/timeago.js";
 
 
 const defaultImage = "https://static.wixstatic.com/media/46e3aa_0fe6d740591a4f589692d326953b7bde~mv2.png";
@@ -42,39 +43,35 @@ template.innerHTML = `
     .username {
         margin: 0px;
         font-weight: bold;
-        font-size: 1.2em;
+        font-size: 17px;
     }
-
     .timeAgo {
         color: #ccc;
         margin: 0px;
         visibility: hidden;
     }
-
     .alter > .message-body {
         background-color: #1a73e8;
         color: white;
         direction: ltr;
     }
-
     .alter {
         direction: rtl;
         float: right;
     }
-
     .text-msg{
         margin: 0px;
-        padding:0.2rem;
+        padding: 4;
     }
-
     .avatar {
         border-radius: 50%;
         /* position: relative; */
         width: 35px;
         height: 35px;
     }
-
-
+    p {
+        font-size: 14px;
+    }
 </style>
 `;
 
@@ -108,6 +105,7 @@ class MessagesComponent extends HTMLElement {
             let msgItem = this._formatMsgHTML(msg)
             this.$container.innerHTML += msgItem;
         });
+        this.scrollToBottom();
     }
 
     _formatMsgHTML(msg) {
@@ -127,10 +125,36 @@ class MessagesComponent extends HTMLElement {
     }
 
     set appendMsg(msg) {
+        // console.log("setting : " , msg)
         this._messages.push(msg);
         let msgItem = this._formatMsgHTML(msg)
         this.$container.innerHTML += msgItem;
         this.scrollToBottom();
+    }
+
+    set appendMsgs(msg) {
+        // console.log("setting : " , msg)
+        this._messages.push(...msg);
+        let msgItem = msg.map(_=>this._formatMsgHTML(_)).join("\n");
+        this.$container.innerHTML += msgItem;
+        this.scrollToBottom();
+    }
+
+    set prependMsg(msg) {
+        // console.log("setting : " , msg)
+        this._messages.unshift(msg);
+        let msgItem = this._formatMsgHTML(msg)
+        this.$container.innerHTML = msgItem + this.$container.innerHTML ;
+        this.scrollToTop();
+    }
+
+    set prependMsgs(msg) {
+        // console.log("setting : " , msg)
+        this._messages.unshift(...msg);
+
+        let msgItems = msg.map(_ => this._formatMsgHTML(_)).join("\n");
+        this.$container.innerHTML = msgItems + this.$container.innerHTML ;
+        this.scrollToTop();
     }
     
     _updateTimeAgo() {
@@ -141,11 +165,15 @@ class MessagesComponent extends HTMLElement {
                 timeAgoEl.textContent = timeago.format(datetime);
             });
             
-        }, 2*60*1000); // 2 mins
+        }, 40*1000); // 2 mins
     }
     
     scrollToBottom() {
         this.$container.scrollTop = this.$container.scrollHeight;
+    }
+
+    scrollToTop() {
+        this.$container.scrollTo(0, 0);
     }
 
 	connectedCallback() {
@@ -157,10 +185,36 @@ class MessagesComponent extends HTMLElement {
         console.log('disconnected!');
         clearInterval(this.interval);
     }
+    static get observedAttributes() {return ['append-msg', "messages"]; }
 
-	attributeChangedCallback(name, oldValue, newValue) {
+
+	attributeChangedCallback(attr, oldValue, newValue) {
+        if(attr === "append-msg") {
+            let msg = JSON.parse(newValue);
+            this.appendMsg = msg;
+        }
+        if(attr === "append-msgs") {
+            let msg = JSON.parse(newValue);
+            this.appendMsgs = msg;
+        }
+        if(attr === "messages"){
+            let msg = JSON.parse(newValue);
+            this.messages = msg;
+        }
+        if(attr === "scroll-bottom") {
+            this.scrollToBottom();
+        }
+        if(attr === "prepend-msg") {
+            let msg = JSON.parse(newValue);
+            this.prependMsg = msg;
+        }
+        if(attr === "prepend-msgs") {
+            let msg = JSON.parse(newValue);
+            this.prependMsgs = msg;
+        }
 		this._renderMessage();
-	}
+    }
+    
 }
 
 window.customElements.define('msg-component', MessagesComponent);

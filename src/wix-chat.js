@@ -8,7 +8,12 @@ const defaultImage = "https://static.wixstatic.com/media/46e3aa_0fe6d740591a4f58
 
 const template = document.createElement('template');
 template.innerHTML = `
-<div class="container" id="msg-box">
+<div class="container">
+ <div id="msg-box"></div>
+ <div class="typing">
+    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+    <p>Typing...</p>
+ </div>
 </div>
 <style>
         
@@ -22,6 +27,7 @@ template.innerHTML = `
         width: 90%;
         display: inline-flex;
         margin: 0px 10px;
+        bottom: 0;
     }
     .message:hover .timeAgo {
         visibility: visible;
@@ -32,7 +38,7 @@ template.innerHTML = `
         margin: 10px;
     }
     .message-body {
-        padding: 0px 10px;
+        padding: 0px 10px 5px 10px;
         width: 85%;
         min-height: 60px;
         background: #ebe7e7;
@@ -44,6 +50,7 @@ template.innerHTML = `
         margin: 0px;
         font-weight: bold;
         font-size: 17px;
+        word-break: break-all;
     }
     .timeAgo {
         color: #ccc;
@@ -71,7 +78,73 @@ template.innerHTML = `
     }
     p {
         font-size: 14px;
+        font-family: sans-serif;
     }
+
+    /* loading animation*/
+    .typing {
+        display: inline-flex;
+        visibility: hidden;
+    }
+    .typing>p {
+        line-height: 3.5;
+    }
+    .lds-ellipsis {
+        display: inline-block;
+        position: relative;
+        width: 80px;
+        height: 80px;
+      }
+      .lds-ellipsis div {
+        position: absolute;
+        top: 33px;
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        background: #eee;
+        animation-timing-function: cubic-bezier(0, 1, 1, 0);
+      }
+      .lds-ellipsis div:nth-child(1) {
+        left: 8px;
+        animation: lds-ellipsis1 0.6s infinite;
+      }
+      .lds-ellipsis div:nth-child(2) {
+        left: 8px;
+        animation: lds-ellipsis2 0.6s infinite;
+      }
+      .lds-ellipsis div:nth-child(3) {
+        left: 32px;
+        animation: lds-ellipsis2 0.6s infinite;
+      }
+      .lds-ellipsis div:nth-child(4) {
+        left: 56px;
+        animation: lds-ellipsis3 0.6s infinite;
+      }
+      @keyframes lds-ellipsis1 {
+        0% {
+          transform: scale(0);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      @keyframes lds-ellipsis3 {
+        0% {
+          transform: scale(1);
+        }
+        100% {
+          transform: scale(0);
+        }
+      }
+      @keyframes lds-ellipsis2 {
+        0% {
+          transform: translate(0, 0);
+        }
+        100% {
+          transform: translate(24px, 0);
+        }
+      }
+      
 </style>
 `;
 
@@ -87,7 +160,9 @@ const getMsgItem = (data)=>`
     <p class="text-msg">${data.msg}</p>
 </div>
 </div>
-`
+`;
+
+// Shadow dom
 class MessagesComponent extends HTMLElement {
 	constructor() {
 		super();
@@ -96,7 +171,8 @@ class MessagesComponent extends HTMLElement {
         this._shadowRoot.appendChild(template.content.cloneNode(true));
         this._messages = [];
         this.$container = this._shadowRoot.getElementById("msg-box");
-
+        this.$typing = this._shadowRoot.querySelector(".typing");
+        
     }
 
     _renderMessage() {
@@ -165,7 +241,7 @@ class MessagesComponent extends HTMLElement {
                 timeAgoEl.textContent = timeago.format(datetime);
             });
             
-        }, 40*1000); // 2 mins
+        }, 40*1000); // 40 secs
     }
     
     scrollToBottom() {
@@ -174,6 +250,10 @@ class MessagesComponent extends HTMLElement {
 
     scrollToTop() {
         this.$container.scrollTo(0, 0);
+    }
+
+    showTyping(show=true) {
+        this.$typing.style.visibility = show ? "visible" : "hidden";
     }
 
 	connectedCallback() {
@@ -185,7 +265,7 @@ class MessagesComponent extends HTMLElement {
         console.log('disconnected!');
         clearInterval(this.interval);
     }
-    static get observedAttributes() {return ['append-msg', 'append-msgs', 'prepend-msg', 'prepend-msgs', "messages"]; }
+    static get observedAttributes() {return ['append-msg', 'append-msgs', 'prepend-msg', 'prepend-msgs', "messages", "typing"]; }
 
 
 	attributeChangedCallback(attr, oldValue, newValue) {
@@ -193,24 +273,28 @@ class MessagesComponent extends HTMLElement {
             let msg = JSON.parse(newValue);
             this.appendMsg = msg;
         }
-        if(attr === "append-msgs") {
+        else if(attr === "append-msgs") {
             let msg = JSON.parse(newValue);
             this.appendMsgs = msg;
         }
-        if(attr === "messages"){
+        else if(attr === "messages"){
             let msg = JSON.parse(newValue);
             this.messages = msg;
         }
-        if(attr === "scroll-bottom") {
+        else if(attr === "scroll-bottom") {
             this.scrollToBottom();
         }
-        if(attr === "prepend-msg") {
+        else if(attr === "prepend-msg") {
             let msg = JSON.parse(newValue);
             this.prependMsg = msg;
         }
-        if(attr === "prepend-msgs") {
+        else if(attr === "prepend-msgs") {
             let msg = JSON.parse(newValue);
             this.prependMsgs = msg;
+        }
+        else if(attr === "typing") {
+            let show = newValue === "true";
+            this.showTyping(show);
         }
 		this._renderMessage();
     }

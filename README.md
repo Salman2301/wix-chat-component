@@ -31,6 +31,7 @@ prepend-msgs
 append-msg
 prepend-msg
 scroll-bottom
+typing
 ```
 
 - . Attributes like `messages,append-msgs,prepend-msgs` will take `array of message objects`
@@ -83,5 +84,8 @@ scroll-bottom
   $w('#ChatElement').setAttribute("append-msg", JSON.stringify(msg));
 
 ```
+
+- . `typing` Attribute can set to `"true"` or `"false"`, if it's `"true"`, it will show a loading gif with a text showing typing at the bottom of the message.
+
 
 

@@ -30,7 +30,7 @@ template.innerHTML = `
         bottom: 0;
     }
     .message:hover .timeAgo {
-        visibility: visible;
+        /* visibility: visible; */
     }
     .message-head {
         text-align: center;
@@ -55,7 +55,7 @@ template.innerHTML = `
     .timeAgo {
         color: #ccc;
         margin: 0px;
-        visibility: hidden;
+        /* visibility: hidden; */
     }
     .alter > .message-body {
         background-color: #1a73e8;
@@ -83,8 +83,7 @@ template.innerHTML = `
 
     /* loading animation*/
     .typing {
-        display: inline-flex;
-        visibility: hidden;
+        display: none;
     }
     .typing>p {
         line-height: 3.5;
@@ -201,7 +200,6 @@ class MessagesComponent extends HTMLElement {
     }
 
     set appendMsg(msg) {
-        // console.log("setting : " , msg)
         this._messages.push(msg);
         let msgItem = this._formatMsgHTML(msg)
         this.$container.innerHTML += msgItem;
@@ -209,7 +207,6 @@ class MessagesComponent extends HTMLElement {
     }
 
     set appendMsgs(msg) {
-        // console.log("setting : " , msg)
         this._messages.push(...msg);
         let msgItem = msg.map(_=>this._formatMsgHTML(_)).join("\n");
         this.$container.innerHTML += msgItem;
@@ -217,7 +214,6 @@ class MessagesComponent extends HTMLElement {
     }
 
     set prependMsg(msg) {
-        // console.log("setting : " , msg)
         this._messages.unshift(msg);
         let msgItem = this._formatMsgHTML(msg)
         this.$container.innerHTML = msgItem + this.$container.innerHTML ;
@@ -225,7 +221,6 @@ class MessagesComponent extends HTMLElement {
     }
 
     set prependMsgs(msg) {
-        // console.log("setting : " , msg)
         this._messages.unshift(...msg);
 
         let msgItems = msg.map(_ => this._formatMsgHTML(_)).join("\n");
@@ -245,15 +240,18 @@ class MessagesComponent extends HTMLElement {
     }
     
     scrollToBottom() {
-        this.$container.scrollTop = this.$container.scrollHeight;
+        this.$container.scrollIntoView(false);
     }
 
     scrollToTop() {
-        this.$container.scrollTo(0, 0);
+        this.$container.scrollIntoView(true);
     }
 
     showTyping(show=true) {
-        this.$typing.style.visibility = show ? "visible" : "hidden";
+        this.$typing.style.display = show ? "inline-flex" : "none";
+        if(show) {
+            this.scrollToBottom();
+        }
     }
 
 	connectedCallback() {

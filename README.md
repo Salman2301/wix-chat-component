@@ -39,6 +39,8 @@ typing
 ### sample corvid.
 
 ```
+// wix code
+
   let msg = [
               {
                 user: {
@@ -70,6 +72,8 @@ typing
 ### sample corvid.
 
 ```
+// wix code
+
   let msg = {
               user: {
                 name: "salman",
@@ -86,6 +90,11 @@ typing
 ```
 
 - . `typing` Attribute can set to `"true"` or `"false"`, if it's `"true"`, it will show a loading gif with a text showing typing at the bottom of the message.
+
+``` 
+// wix code
+$w('#ChatElement').setAttribute("typing", "true");
+```
 
 
 

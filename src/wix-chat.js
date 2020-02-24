@@ -1,5 +1,5 @@
 // time ago 
-import * as timeago from "./timeago.js";
+import("./timeago.js");
 // wix public location
 // import * as timeago from "public/custom-elements/timeago.js";
 

@@ -32,7 +32,6 @@ for live testing vist this [link](https://www.test.salman2301.com/)
 - prepend-msgs
 - append-msg
 - prepend-msg
-- scroll-bottom
 - typing
 - has-load-more
 ```
@@ -78,8 +77,8 @@ for live testing vist this [link](https://www.test.salman2301.com/)
 ### Attributes : `"append-msg" or "prepend-msg"`
 
 Attributes like `"append-msg" or "prepend-msg"` will take [message objects](https://github.com/Salman2301/wix-chat-component#sample-messages-object).\
- On `"append-msg"` attribute changed will the new message to the bottom of the message and scroll to bottom.\
- On `"prepend-msg"` attribute changed will the new message to the top of the message and scroll to top.
+ On `"append-msg"` attribute changed will add the new message to the bottom of the message and scroll to bottom.\
+ On `"prepend-msg"` attribute changed will add the new message to the top of the message and scroll to top.
 
 
 ```

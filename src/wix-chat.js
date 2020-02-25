@@ -256,7 +256,7 @@ class MessagesComponent extends HTMLElement {
         this._messages.push(...msg);
         let msgItem = msg.map(_=>this._formatMsgHTML(_)).join("\n");
         this.$container.innerHTML += msgItem;
-        this.scrollToBottom();
+        // this.scrollToBottom();
     }
 
     set prependMsg(msg) {
@@ -271,7 +271,7 @@ class MessagesComponent extends HTMLElement {
 
         let msgItems = msg.map(_ => this._formatMsgHTML(_)).join("\n");
         this.$container.innerHTML = msgItems + this.$container.innerHTML ;
-        this.scrollToTop();
+        // this.scrollToTop();
     }
     
     _updateTimeAgo() {

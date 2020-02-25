@@ -1,11 +1,11 @@
 # wix-chat-component
 Chat component to connect with wix
 
-for live testing vist this [link]("https://www.test.salman2301.com/");
+for live testing vist this [link](https://www.test.salman2301.com/)
 
 <br>
 
-### sample messages object
+### Sample messages object
 
 ```
 {
@@ -39,7 +39,10 @@ for live testing vist this [link]("https://www.test.salman2301.com/");
 <br>
 
 ### Attributes : `"messages" or "append-msgs" or "prepend-msgs"`
- Attributes like `"messages" or "append-msgs" or "prepend-msgs" ` will take `array` of [message objects](https://github.com/Salman2301/wix-chat-component#sample-messages-object)
+ Attributes like `"messages" or "append-msgs" or "prepend-msgs" ` will take `array` of [message objects](https://github.com/Salman2301/wix-chat-component#sample-messages-object).\
+ On `"message"` attribute changed will overrite all the messages if there is any (recommend to use it when the app is initialized!).\
+ On `"append-msgs"` attribute changed will add all the new messages to the bottom of the messages.\
+ On `"prepend-msgs"` attribute changed will add all the new messages to the top of the messages.
 
 
 ```
@@ -74,7 +77,11 @@ for live testing vist this [link]("https://www.test.salman2301.com/");
 
 ### Attributes : `"append-msg" or "prepend-msg"`
 
-Attributes like `"append-msg" or "prepend-msg"` will take [message objects](https://github.com/Salman2301/wix-chat-component#sample-messages-object)
+Attributes like `"append-msg" or "prepend-msg"` will take [message objects](https://github.com/Salman2301/wix-chat-component#sample-messages-object).\
+ On `"append-msg"` attribute changed will the new message to the bottom of the message and scroll to bottom.\
+ On `"prepend-msg"` attribute changed will the new message to the top of the message and scroll to top.
+
+
 ```
 // wix code
 
@@ -106,7 +113,7 @@ $w('#ChatElement').setAttribute("typing", "true");
 
 ### Attribute: `"has-load-more"`
 
-Attribute `has-load-more` can set to `"true"` or `"false"`, if it's `"true"` it will show a button with a label `"load more"` on click will fire an event `loadmore` and event can be catched with `$on()` method in wix site. to know more [click here](https://www.wix.com/corvid/reference/$w.CustomElement.html#on) wix $on event handler
+Attribute `has-load-more` can set to `"true"` or `"false"`, if it's `"true"` it will show a button with a label `"load more"` on click will fire an event `loadmore` and event can be catched with `$on()` method in wix site. to know more about wix $on event handler [click here](https://www.wix.com/corvid/reference/$w.CustomElement.html#on)
 
 ```
 $w('#ChatElement').$on("loadmore", function() {

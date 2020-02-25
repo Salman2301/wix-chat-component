@@ -158,6 +158,7 @@ template.innerHTML = `
       /* load more css */
       .loadmore {
           text-align: center;
+          display: none;
       }
       .btn-loadmore {
         margin: .2em .1em;
@@ -207,13 +208,16 @@ class MessagesComponent extends HTMLElement {
         this._messages = [];
         this.$container = this._shadowRoot.getElementById("msg-box");
         this.$typing = this._shadowRoot.querySelector(".typing");
-        
+        this.$btnLoadMore = this._shadowRoot.querySelector(".loadmore");
+
 
         this.$container.addEventListener("scroll", function(){
             if(window.scrollY==0){
                 console.log("TOP of the page");
             } 
-          });
+        });
+
+       
     }
 
     _renderMessage() {
@@ -296,7 +300,20 @@ class MessagesComponent extends HTMLElement {
         }
     }
 
+    showLoadmore(show=true) {
+        this.$btnLoadMore.style.display = show ? "block" : "none";
+    }
+
 	connectedCallback() {
+        this.$btnLoadMore.addEventListener("click" , function() {
+            console.log("clicked!!");
+            this.dispatchEvent(new CustomEvent('loadmore',{
+                bubbles: true,
+                cancelable: false,
+                composed: true
+              }))
+        });
+
         this._renderMessage();
         this._updateTimeAgo();
     }
@@ -305,7 +322,7 @@ class MessagesComponent extends HTMLElement {
         console.log('disconnected!');
         clearInterval(this.interval);
     }
-    static get observedAttributes() {return ['append-msg', 'append-msgs', 'prepend-msg', 'prepend-msgs', "messages", "typing"]; }
+    static get observedAttributes() {return ['append-msg', 'append-msgs', 'prepend-msg', 'prepend-msgs', "messages", "typing", 'has-load-more']; }
 
 
 	attributeChangedCallback(attr, oldValue, newValue) {
@@ -335,6 +352,10 @@ class MessagesComponent extends HTMLElement {
         else if(attr === "typing") {
             let show = newValue === "true";
             this.showTyping(show);
+        }
+        else if(attr === "has-load-more") {
+            let show = newValue === "true";
+            this.showLoadmore(show);
         }
 		this._renderMessage();
     }

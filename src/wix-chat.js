@@ -1,10 +1,9 @@
 // time ago
-import("./timeago.js");
+// import("./timeago.js");
 // wix public location
-// import * as timeago from "public/custom-elements/timeago.js";
+import * as timeago from "public/custom-elements/timeago.js";
 
-const defaultImage =
-  "https://static.wixstatic.com/media/46e3aa_0fe6d740591a4f589692d326953b7bde~mv2.png";
+const defaultImage ="https://static.wixstatic.com/media/46e3aa_0fe6d740591a4f589692d326953b7bde~mv2.png";
 
 const template = document.createElement("template");
 template.innerHTML = `
@@ -261,7 +260,6 @@ class MessagesComponent extends HTMLElement {
     this._messages.push(...msg);
     let msgItem = msg.map(_ => this._formatMsgHTML(_)).join("\n");
     this.$container.innerHTML += msgItem;
-    // this.scrollToBottom();
   }
 
   // Prepend Message Section
@@ -277,7 +275,7 @@ class MessagesComponent extends HTMLElement {
 
     let msgItems = msg.map(_ => this._formatMsgHTML(_)).join("\n");
     this.$container.innerHTML = msgItems + this.$container.innerHTML;
-    // this.scrollToTop();
+    
   }
 
   // Utitlity method
@@ -308,6 +306,15 @@ class MessagesComponent extends HTMLElement {
 
   showLoadmore(show = true) {
     this.$btnLoadMore.style.display = show ? "block" : "none";
+  }
+
+  IsJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
   }
 
   // lifecycle of web component
@@ -346,35 +353,32 @@ class MessagesComponent extends HTMLElement {
   }
 
   attributeChangedCallback(attr, oldValue, newValue) {
+    let msg,show;
+
     switch (attr) {
       case "append-msg":
-        let msg = JSON.parse(newValue);
+        msg = JSON.parse(newValue);
         this.appendMsg = msg;
-        this._renderMessage();
         break;
       
       case "append-msgs":
-        let msg = JSON.parse(newValue);
+        msg = JSON.parse(newValue);
         this.appendMsgs = msg;
-        this._renderMessage();
         break;
 
       case "messages":
-        let msg = JSON.parse(newValue);
+        msg = JSON.parse(newValue);
         this.messages = msg;
-        this._renderMessage();
         break;
 
       case "prepend-msg":
-        let msg = JSON.parse(newValue);
+        msg = JSON.parse(newValue);
         this.prependMsg = msg;
-        this._renderMessage();
         break;
       
       case "prepend-msgs":
-        let msg = JSON.parse(newValue);
+        msg = JSON.parse(newValue);
         this.prependMsgs = msg;
-        this._renderMessage();
         break;
 
       case "scroll-bottom":
@@ -385,12 +389,12 @@ class MessagesComponent extends HTMLElement {
         this.scrollToTop();
         break;
       case "typing":
-        let show = newValue === "true";
+        show = newValue === "true";
         this.showTyping(show);
         break;
       
       case "has-load-more":
-        let show = newValue === "true";
+        show = newValue === "true";
         this.showLoadmore(show);
         break;
     

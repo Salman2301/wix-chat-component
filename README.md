@@ -34,7 +34,7 @@ scroll-bottom
 typing
 ```
 
-- . Attributes like `messages,append-msgs,prepend-msgs` will take `array of message objects`
+-  Attributes like `messages,append-msgs,prepend-msgs` will take `array of message objects`
 
 ### sample corvid.
 
@@ -67,7 +67,7 @@ typing
 ```
 
 
-- . Attributes like `append-msg,prepend-msg` will take `message objects`
+-  Attributes like `append-msg,prepend-msg` will take `message objects`
 
 ### sample corvid.
 
@@ -89,7 +89,7 @@ typing
 
 ```
 
-- . `typing` Attribute can set to `"true"` or `"false"`, if it's `"true"`, it will show a loading gif with a text showing typing at the bottom of the message.
+-  `typing` Attribute can set to `"true"` or `"false"`, if it's `"true"`, it will show a loading gif with a text showing typing at the bottom of the message.
 
 ``` 
 // wix code

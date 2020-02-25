@@ -9,6 +9,7 @@ const defaultImage = "https://static.wixstatic.com/media/46e3aa_0fe6d740591a4f58
 const template = document.createElement('template');
 template.innerHTML = `
 <div class="container">
+ <div class="loadmore"><button type="button" class="btn-loadmore" id="btnLoadMore" >Load more</button></div>
  <div id="msg-box"></div>
  <div class="typing">
     <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
@@ -16,6 +17,15 @@ template.innerHTML = `
  </div>
 </div>
 <style>
+    :host{
+        --brand-color: #5cb85c;
+        --brand-color-dark: #3c783c;
+        --brand-color-blue: #1a73e8;
+        --brand-color-grey: #ebe7e7;
+        --brand-gradient-grey: linear-gradient(10deg, aliceblue, white);
+        --brand-gradient-blue: linear-gradient(10deg, #348bff, #ff4aff);
+        --brand-color-hover: #e4eef8;
+    }
         
     .container {
         height: 400px;
@@ -35,13 +45,14 @@ template.innerHTML = `
     .message-head {
         text-align: center;
         width: 15%;
-        margin: 10px;
+        margin: auto;
     }
     .message-body {
         padding: 0px 10px 5px 10px;
         width: 85%;
         min-height: 60px;
-        background: #ebe7e7;
+        /* background: var(--brand-color-grey); */
+        background-image: var(--brand-gradient-grey);
         margin: 10px 0px;
         border: 1px solid #ccc;
         border-radius: 15px;
@@ -53,12 +64,13 @@ template.innerHTML = `
         word-break: break-all;
     }
     .timeAgo {
-        color: #ccc;
-        margin: 0px;
+        color: #bcbcbc;
+        margin: 4px 0 10px 0;
         /* visibility: hidden; */
     }
     .alter > .message-body {
-        background-color: #1a73e8;
+        /* background-color: var(--brand-color-blue); */
+        background-image: var(--brand-gradient-blue);
         color: white;
         direction: ltr;
     }
@@ -67,7 +79,7 @@ template.innerHTML = `
         float: right;
     }
     .text-msg{
-        margin: 0px;
+        margin: 0 4px 4px 4px;
         padding: 4;
     }
     .avatar {
@@ -78,7 +90,7 @@ template.innerHTML = `
     }
     p {
         font-size: 14px;
-        font-family: sans-serif;
+        font-family: arial, sans-serif;
     }
 
     /* loading animation*/
@@ -143,6 +155,30 @@ template.innerHTML = `
           transform: translate(24px, 0);
         }
       }
+      /* load more css */
+      .loadmore {
+          text-align: center;
+      }
+      .btn-loadmore {
+        margin: .2em .1em;
+        font-family: arial, sans-serif;
+        /* font-weight: 700; */
+        font-size: 1em;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        border: none;
+        border: 1px solid black;
+        border-radius: 3px;
+        padding: 5px 10px;
+        /* background: var(--brand-color); */
+        background-image: var(--brand-gradient-grey);
+        color: black;
+      }
+      .btn-loadmore:hover {
+        background: #e4eef8;
+      }
+
+      
       
 </style>
 `;
@@ -172,6 +208,12 @@ class MessagesComponent extends HTMLElement {
         this.$container = this._shadowRoot.getElementById("msg-box");
         this.$typing = this._shadowRoot.querySelector(".typing");
         
+
+        this.$container.addEventListener("scroll", function(){
+            if(window.scrollY==0){
+                console.log("TOP of the page");
+            } 
+          });
     }
 
     _renderMessage() {

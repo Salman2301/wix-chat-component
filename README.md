@@ -38,7 +38,8 @@ for live testing vist this [link]("https://www.test.salman2301.com/");
 ```
 <br>
 
-### -  Attributes like `"messages" or "append-msgs" or "prepend-msgs" ` will take `array of message objects`
+### Attributes : `"messages" or "append-msgs" or "prepend-msgs"`
+ Attributes like `"messages" or "append-msgs" or "prepend-msgs" ` will take `array` of [message objects](https://github.com/Salman2301/wix-chat-component#sample-messages-object)
 
 
 ```
@@ -71,8 +72,9 @@ for live testing vist this [link]("https://www.test.salman2301.com/");
 
 <br>
 
-### -  Attributes like `"append-msg" or "prepend-msg"` will take `message objects`
+### Attributes : `"append-msg" or "prepend-msg"`
 
+Attributes like `"append-msg" or "prepend-msg"` will take [message objects](https://github.com/Salman2301/wix-chat-component#sample-messages-object)
 ```
 // wix code
 
@@ -93,7 +95,8 @@ for live testing vist this [link]("https://www.test.salman2301.com/");
 
 <br>
 
-### -  Attribute `typing` can set to `"true"` or `"false"`, if it's `"true"`, it will show a loading gif with a text showing typing at the bottom of the message.
+### Attribute : `"typing"`
+Attribute `typing` can set to `"true"` or `"false"`, if it's `"true"`, it will show a loading gif with a text showing typing at the bottom of the message.
 
 ``` 
 // wix code
@@ -101,7 +104,9 @@ $w('#ChatElement').setAttribute("typing", "true");
 ```
 <br>
 
-### - Attribute `has-load-more` can set to `"true"` or `"false"`, if it's `"true"` it will show a button with a label `"load more"` on click will fire an event `loadmore` and event can be catched with `$on()` method in wix site. to know more [click here](https://www.wix.com/corvid/reference/$w.CustomElement.html#on)
+### Attribute: `"has-load-more"`
+
+Attribute `has-load-more` can set to `"true"` or `"false"`, if it's `"true"` it will show a button with a label `"load more"` on click will fire an event `loadmore` and event can be catched with `$on()` method in wix site. to know more [click here](https://www.wix.com/corvid/reference/$w.CustomElement.html#on) wix $on event handler
 
 ```
 $w('#ChatElement').$on("loadmore", function() {

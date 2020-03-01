@@ -1,17 +1,24 @@
 // time ago 
-import * as timeago from "./timeago.js";
+// import("./timeago.js");
+
+// import * as timeago from "./timeago.js";
 // wix public location
 // import * as timeago from "public/custom-elements/timeago.js";
+
+import timeago from "timeago";
 
 
 const defaultImage = "https://static.wixstatic.com/media/46e3aa_0fe6d740591a4f589692d326953b7bde~mv2.png";
 
 const template = document.createElement('template');
 template.innerHTML = `
+<h1 class="title">Message</h1>
 <div class="container" id="msg-box">
 </div>
 <style>
-        
+    .title {
+        text-align : center;
+    }
     .container {
         height: 400px;
         background-color: rgba(0,0,0,0);

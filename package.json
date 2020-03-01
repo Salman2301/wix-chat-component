@@ -1,0 +1,35 @@
+{
+  "name": "wix-chat-component",
+  "version": "1.0.0",
+  "description": "Chat component to connect with wix",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "rollup -c -w",
+    "build": "rollup -c",
+    "start:dev": "sirv public --single --dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Salman2301/wix-chat-component.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Salman2301/wix-chat-component/issues"
+  },
+  "homepage": "https://github.com/Salman2301/wix-chat-component#readme",
+  "dependencies": {
+    "timeago": "^1.6.7",
+    "sirv-cli": "^0.4.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2",
+    "rollup": "^1.31.1",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-livereload": "^1.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^5.1.2"
+  }
+}

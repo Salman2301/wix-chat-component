@@ -1,0 +1,23 @@
+import wixData from 'wix-data';
+import wixUsers from 'wix-users-backend';
+
+
+export async function getUsers(filter) {
+	let userId = wixUsers.currentUser.id; // ne is not working for userId 
+	let email = await wixUsers.currentUser.getEmail();
+	let query = await wixData.query("Members/PrivateMembersData").ne("loginEmail" ,email);
+
+	if(filter) query = query.containes("loginEmail", filter);
+
+	let res = await query.find({suppressAuth: true});
+	return res;
+}
+
+
+export async function getMe() {
+	let userId = wixUsers.currentUser.id; // ne is not working for userId 
+	let email = await wixUsers.currentUser.getEmail();
+	let res = await wixData.query("Members/PrivateMembersData").eq("loginEmail" ,email).limit(1).find({suppressAuth: true});
+
+	return res.items[0];
+}

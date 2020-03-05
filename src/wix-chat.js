@@ -1,7 +1,7 @@
 // time ago
-// import("./timeago.js");
+import("./timeago.js");
 // wix public location
-import * as timeago from "public/custom-elements/timeago.js";
+// import * as timeago from "public/custom-elements/timeago.js";
 
 const defaultImage ="https://static.wixstatic.com/media/46e3aa_0fe6d740591a4f589692d326953b7bde~mv2.png";
 
@@ -290,11 +290,15 @@ class MessagesComponent extends HTMLElement {
   }
 
   scrollToBottom() {
-    this.$container.scrollIntoView(false);
+    this.$container.scrollTop = this.$container.scrollHeight;
+
+    // this.$container.scrollIntoView(false);
   }
 
   scrollToTop() {
-    this.$container.scrollIntoView(true);
+    this.$container.scrollTo(0, 0);
+
+    // this.$container.scrollIntoView(true);
   }
 
   showTyping(show = true) {

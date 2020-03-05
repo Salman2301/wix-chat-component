@@ -1,0 +1,100 @@
+{
+  "displayName": "message",
+  "permissions": {
+    "insert": "siteMember",
+    "update": "admin",
+    "remove": "admin",
+    "read": "siteMember"
+  },
+  "allowedOperations": [
+    "count",
+    "get",
+    "find",
+    "remove",
+    "insert",
+    "update"
+  ],
+  "id": "message",
+  "isDeleted": false,
+  "ownerAppId": null,
+  "displayNamespace": null,
+  "fields": {
+    "seen": {
+      "displayName": "seen",
+      "sortable": true,
+      "isDeleted": false,
+      "systemField": false,
+      "type": "boolean",
+      "index": 8
+    },
+    "_id": {
+      "displayName": "ID",
+      "sortable": true,
+      "isDeleted": false,
+      "systemField": true,
+      "type": "text",
+      "index": 1
+    },
+    "_owner": {
+      "displayName": "Owner",
+      "sortable": true,
+      "isDeleted": false,
+      "systemField": true,
+      "type": "text",
+      "index": 2
+    },
+    "_createdDate": {
+      "displayName": "Created Date",
+      "sortable": true,
+      "isDeleted": false,
+      "systemField": true,
+      "type": "datetime",
+      "index": 3
+    },
+    "_updatedDate": {
+      "displayName": "Updated Date",
+      "sortable": true,
+      "isDeleted": false,
+      "systemField": true,
+      "type": "datetime",
+      "index": 4
+    },
+    "to": {
+      "displayName": "to",
+      "sortable": true,
+      "referencedCollection": "Members/PrivateMembersData",
+      "isDeleted": false,
+      "systemField": false,
+      "type": "reference",
+      "index": 5
+    },
+    "from": {
+      "displayName": "from",
+      "sortable": true,
+      "referencedCollection": "Members/PrivateMembersData",
+      "isDeleted": false,
+      "systemField": false,
+      "type": "reference",
+      "index": 6
+    },
+    "message": {
+      "displayName": "Message",
+      "sortable": true,
+      "isDeleted": false,
+      "systemField": false,
+      "type": "text",
+      "index": 7
+    },
+    "title": {
+      "displayName": "Title",
+      "sortable": true,
+      "isDeleted": true,
+      "systemField": false,
+      "type": "text",
+      "index": 0
+    }
+  },
+  "displayField": "message",
+  "storage": "docstore",
+  "namespace": null
+}

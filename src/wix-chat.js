@@ -1,30 +1,280 @@
 // time ago
-import("./timeago.js");
+// import("./timeago.js");
 // wix public location
-// import * as timeago from "public/custom-elements/timeago.js";
+import * as timeago from "public/custom-elements/timeago.js";
 
 const defaultImage ="https://static.wixstatic.com/media/46e3aa_0fe6d740591a4f589692d326953b7bde~mv2.png";
 
 const template = document.createElement("template");
-template.innerHTML = `
-<div class="container">
-  <!-- LODE MORE SECTION -->
-  <div class="loadmore">
-    <button type="button" class="btn-loadmore" id="btnLoadMore" >Load more</button>
+template.innerHTML = mainHTML();
+
+// Shadow dom
+class MessagesComponent extends HTMLElement {
+  constructor() {
+    super();
+
+    this._shadowRoot = this.attachShadow({ mode: "open" });
+    this._shadowRoot.appendChild(template.content.cloneNode(true));
+    
+    // properties
+    this._messages = [];
+
+    // selector
+    this.$container = this._shadowRoot.querySelector(".container");
+    this.$messagesEl = this._shadowRoot.getElementById("msg-box");
+    this.$typing = this._shadowRoot.querySelector(".typing");
+    this.$btnLoadMore = this._shadowRoot.querySelector(".loadmore");
+
+    // SET GLOBAL CSS
+    let styleSheet = document.createElement("style");
+    // styleSheet.append(global_css);
+    
+    styleSheet.type = 'text/css';
+    if (styleSheet.styleSheet){
+      // This is required for IE8 and below.
+      styleSheet.styleSheet.cssText = global_css;
+    } else {
+      styleSheet.appendChild(document.createTextNode(get_global_css()));
+    }
+
+    this._shadowRoot.appendChild(styleSheet);
+    
+    // console.log({styleSheet});
+
+  }
+  
+  // append the message html to $messagesEl
+  _renderMessage() {
+    this.$messagesEl.innerHTML = "";
+    this._messages.forEach(msg => {
+      let msgItem = this._formatMsgHTML(msg);
+      this.$messagesEl.innerHTML += msgItem;
+    });
+    this.scrollToBottom();
+  }
+
+  // format js object to html
+  _formatMsgHTML(msg) {
+    msg.user.image = msg.user.image || defaultImage;
+    msg.timeAgoStr = timeago.format(msg.date);
+    return getMsgItem(msg);
+  }
+
+  // Message Section
+  set messages(value) {
+    this._messages = value;
+    this._renderMessage();
+  }
+
+  get messages() {
+    return this._messages;
+  }
+
+  // Append Message Section
+  set appendMsg(msg) {
+    this._messages.push(msg);
+    let msgItem = this._formatMsgHTML(msg);
+    this.$messagesEl.innerHTML += msgItem;
+    this.scrollToBottom();
+  }
+
+  set appendMsgs(msg) {
+    this._messages.push(...msg);
+    let msgItem = msg.map(_ => this._formatMsgHTML(_)).join("\n");
+    this.$messagesEl.innerHTML += msgItem;
+  }
+
+  // Prepend Message Section
+  set prependMsg(msg) {
+    this._messages.unshift(msg);
+    let msgItem = this._formatMsgHTML(msg);
+    this.$messagesEl.innerHTML = msgItem + this.$messagesEl.innerHTML;
+    this.scrollToTop();
+  }
+
+  set prependMsgs(msg) {
+    this._messages.unshift(...msg);
+
+    let msgItems = msg.map(_ => this._formatMsgHTML(_)).join("\n");
+    this.$messagesEl.innerHTML = msgItems + this.$messagesEl.innerHTML;
+    
+  }
+
+  // Utitlity method
+  _updateTimeAgo() {
+    this.interval = setInterval(() => {
+      Array.prototype.slice.call(this.$messagesEl.children).forEach(el => {
+        let timeAgoEl = el.children[1].children[0];
+        let datetime = timeAgoEl.getAttribute("datetime");
+        timeAgoEl.textContent = timeago.format(datetime);
+      });
+    }, 40 * 1000); // 40 secs
+  }
+
+  scrollToBottom() {
+    this.$container.scrollTop  = this.$container.scrollHeight;
+    // this.$messagesEl.scrollTop = this.$messagesEl.scrollHeight;
+    // this.$messagesEl.parentElement.scrollIntoView(false);
+  }
+
+  scrollToTop() {
+    this.$container.scrollTop  = 0;
+    // this.$messagesEl.scrollTo(0, 0);
+    // this.$messagesEl.parentElement.scrollIntoView(true);
+  }
+
+  showTyping(show = true) {
+    this.$typing.style.display = show ? "inline-flex" : "none";
+    if (show) {
+      this.scrollToBottom();
+    }
+  }
+
+  showLoadmore(show = true) {
+    this.$btnLoadMore.style.display = show ? "block" : "none";
+  }
+
+  IsJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+  }
+
+  // lifecycle of web component
+  connectedCallback() {
+    this.$btnLoadMore.addEventListener("click", function() {
+      console.log("clicked!!");
+      this.dispatchEvent(
+        new CustomEvent("loadmore", {
+          bubbles: true,
+          cancelable: false,
+          composed: true
+        })
+      );
+    });
+
+    this._renderMessage();
+    this._updateTimeAgo();
+  }
+
+  disconnectedCallback() {
+    console.log("disconnected!");
+    clearInterval(this.interval);
+  }
+
+  // Attribute observe and call back
+  static get observedAttributes() {
+    return [
+      "append-msg",
+      "append-msgs",
+      "prepend-msg",
+      "prepend-msgs",
+      "messages",
+      "typing",
+      "has-load-more"
+    ];
+  }
+
+  attributeChangedCallback(attr, oldValue, newValue) {
+    let msg,show;
+
+    switch (attr) {
+      case "append-msg":
+        msg = JSON.parse(newValue);
+        this.appendMsg = msg;
+        break;
+      
+      case "append-msgs":
+        msg = JSON.parse(newValue);
+        this.appendMsgs = msg;
+        break;
+
+      case "messages":
+        msg = JSON.parse(newValue);
+        this.messages = msg;
+        break;
+
+      case "prepend-msg":
+        msg = JSON.parse(newValue);
+        this.prependMsg = msg;
+        break;
+      
+      case "prepend-msgs":
+        msg = JSON.parse(newValue);
+        this.prependMsgs = msg;
+        break;
+
+      case "scroll-bottom":
+        this.scrollToBottom();
+        break;
+
+      case "scroll-top":
+        this.scrollToTop();
+        break;
+      case "typing":
+        show = newValue === "true";
+        this.showTyping(show);
+        break;
+      
+      case "has-load-more":
+        show = newValue === "true";
+        this.showLoadmore(show);
+        break;
+    
+      default:
+        console.log("unhandle attribute changed : ", attr);
+        break;
+    }
+  }
+}
+
+window.customElements.define("msg-component", MessagesComponent);
+
+
+
+// helper functions
+function mainHTML() {
+  return `
+  <div class="container">
+    <!-- LODE MORE SECTION -->
+    <div class="loadmore">
+      <button type="button" class="btn-loadmore" id="btnLoadMore" >Load more</button>
+    </div>
+
+    <!-- MESSAGE BODY SECTION -->
+    <div id="msg-box"></div>
+
+    <!-- TYPING SECTION -->
+    <div class="typing">
+      <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+      <p>Typing...</p>
+    </div>
+
   </div>
+`
+}
 
-  <!-- MESSAGE BODY SECTION -->
-  <div id="msg-box"></div>
+function getMsgItem(data){
+  return `
+  <div class="message ${data.isOwner ? "alter" : ""}">
+    <div class="message-head">
+      <img class="avatar" src=${data.user.image} alt="Avatar">
+      <p class=username>${data.isOwner ? "You" : data.user.name}</p>
+    </div>
 
-  <!-- TYPING SECTION -->
-  <div class="typing">
-    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-    <p>Typing...</p>
+    <div class="message-body">
+      <p class="timeAgo" datetime=${data.date}>${data.timeAgoStr}</p>
+      <p class="text-msg">${data.msg}</p>
+    </div>
   </div>
+`;
+}
 
-</div>
-
-<style>
+function get_global_css() {
+  return `
   :host{
     --brand-color: #5cb85c;
     --brand-color-dark: #3c783c;
@@ -40,6 +290,9 @@ template.innerHTML = `
     background-color: rgba(0,0,0,0);
     overflow: overlay;
     display: block;
+    width: 100%;
+    min-width: 600px;
+    max-width: 600px;
   }
   .message {
     width: 90%;
@@ -167,6 +420,7 @@ template.innerHTML = `
   .loadmore {
       text-align: center;
       display: none;
+    
   }
   .btn-loadmore {
     margin: .2em .1em;
@@ -182,231 +436,10 @@ template.innerHTML = `
     /* background: var(--brand-color); */
     background-image: var(--brand-gradient-grey);
     color: black;
+    cursor: pointer;
   }
   .btn-loadmore:hover {
     background: #e4eef8;
   }
-</style>
 `;
-
-const getMsgItem = data => `
-  <div class="message ${data.isOwner ? "alter" : ""}">
-    <div class="message-head">
-      <img class="avatar" src=${data.user.image} alt="Avatar">
-      <p class=username>${data.isOwner ? "You" : data.user.name}</p>
-    </div>
-
-    <div class="message-body">
-      <p class="timeAgo" datetime=${data.date}>${data.timeAgoStr}</p>
-      <p class="text-msg">${data.msg}</p>
-    </div>
-  </div>
-`;
-
-// Shadow dom
-class MessagesComponent extends HTMLElement {
-  constructor() {
-    super();
-
-    this._shadowRoot = this.attachShadow({ mode: "open" });
-    this._shadowRoot.appendChild(template.content.cloneNode(true));
-    
-    // properties
-    this._messages = [];
-
-    // selector
-    this.$container = this._shadowRoot.getElementById("msg-box");
-    this.$typing = this._shadowRoot.querySelector(".typing");
-    this.$btnLoadMore = this._shadowRoot.querySelector(".loadmore");
-
-  }
-  
-  // append the message html to $container
-  _renderMessage() {
-    this.$container.innerHTML = "";
-    this._messages.forEach(msg => {
-      let msgItem = this._formatMsgHTML(msg);
-      this.$container.innerHTML += msgItem;
-    });
-    this.scrollToBottom();
-  }
-
-  // format js object to html
-  _formatMsgHTML(msg) {
-    msg.user.image = msg.user.image || defaultImage;
-    msg.timeAgoStr = timeago.format(msg.date);
-    return getMsgItem(msg);
-  }
-
-  // Message Section
-  set messages(value) {
-    this._messages = value;
-    this._renderMessage();
-  }
-
-  get messages() {
-    return this._messages;
-  }
-
-  // Append Message Section
-  set appendMsg(msg) {
-    this._messages.push(msg);
-    let msgItem = this._formatMsgHTML(msg);
-    this.$container.innerHTML += msgItem;
-    this.scrollToBottom();
-  }
-
-  set appendMsgs(msg) {
-    this._messages.push(...msg);
-    let msgItem = msg.map(_ => this._formatMsgHTML(_)).join("\n");
-    this.$container.innerHTML += msgItem;
-  }
-
-  // Prepend Message Section
-  set prependMsg(msg) {
-    this._messages.unshift(msg);
-    let msgItem = this._formatMsgHTML(msg);
-    this.$container.innerHTML = msgItem + this.$container.innerHTML;
-    this.scrollToTop();
-  }
-
-  set prependMsgs(msg) {
-    this._messages.unshift(...msg);
-
-    let msgItems = msg.map(_ => this._formatMsgHTML(_)).join("\n");
-    this.$container.innerHTML = msgItems + this.$container.innerHTML;
-    
-  }
-
-  // Utitlity method
-  _updateTimeAgo() {
-    this.interval = setInterval(() => {
-      Array.prototype.slice.call(this.$container.children).forEach(el => {
-        let timeAgoEl = el.children[1].children[0];
-        let datetime = timeAgoEl.getAttribute("datetime");
-        timeAgoEl.textContent = timeago.format(datetime);
-      });
-    }, 40 * 1000); // 40 secs
-  }
-
-  scrollToBottom() {
-    this.$container.scrollTop = this.$container.scrollHeight;
-
-    // this.$container.scrollIntoView(false);
-  }
-
-  scrollToTop() {
-    this.$container.scrollTo(0, 0);
-
-    // this.$container.scrollIntoView(true);
-  }
-
-  showTyping(show = true) {
-    this.$typing.style.display = show ? "inline-flex" : "none";
-    if (show) {
-      this.scrollToBottom();
-    }
-  }
-
-  showLoadmore(show = true) {
-    this.$btnLoadMore.style.display = show ? "block" : "none";
-  }
-
-  IsJsonString(str) {
-    try {
-        JSON.parse(str);
-    } catch (e) {
-        return false;
-    }
-    return true;
-  }
-
-  // lifecycle of web component
-  connectedCallback() {
-    this.$btnLoadMore.addEventListener("click", function() {
-      console.log("clicked!!");
-      this.dispatchEvent(
-        new CustomEvent("loadmore", {
-          bubbles: true,
-          cancelable: false,
-          composed: true
-        })
-      );
-    });
-
-    this._renderMessage();
-    this._updateTimeAgo();
-  }
-
-  disconnectedCallback() {
-    console.log("disconnected!");
-    clearInterval(this.interval);
-  }
-
-  // Attribute observe and call back
-  static get observedAttributes() {
-    return [
-      "append-msg",
-      "append-msgs",
-      "prepend-msg",
-      "prepend-msgs",
-      "messages",
-      "typing",
-      "has-load-more"
-    ];
-  }
-
-  attributeChangedCallback(attr, oldValue, newValue) {
-    let msg,show;
-
-    switch (attr) {
-      case "append-msg":
-        msg = JSON.parse(newValue);
-        this.appendMsg = msg;
-        break;
-      
-      case "append-msgs":
-        msg = JSON.parse(newValue);
-        this.appendMsgs = msg;
-        break;
-
-      case "messages":
-        msg = JSON.parse(newValue);
-        this.messages = msg;
-        break;
-
-      case "prepend-msg":
-        msg = JSON.parse(newValue);
-        this.prependMsg = msg;
-        break;
-      
-      case "prepend-msgs":
-        msg = JSON.parse(newValue);
-        this.prependMsgs = msg;
-        break;
-
-      case "scroll-bottom":
-        this.scrollToBottom();
-        break;
-
-      case "scroll-top":
-        this.scrollToTop();
-        break;
-      case "typing":
-        show = newValue === "true";
-        this.showTyping(show);
-        break;
-      
-      case "has-load-more":
-        show = newValue === "true";
-        this.showLoadmore(show);
-        break;
-    
-      default:
-        console.log("unhandle attribute changed : ", attr);
-        break;
-    }
-  }
 }
-
-window.customElements.define("msg-component", MessagesComponent);

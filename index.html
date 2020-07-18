@@ -1,23 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat App test</title>
-    <style>
-    .message-container{
-        width: 600px;
-        position: absolute;
-        margin: auto;
-        left: calc(50vw - 300px);
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat App test</title>
+  <style>
+    .message-container {
+      width: 600px;
+      position: absolute;
+      margin: auto;
+      left: calc(50vw - 300px);
+      border: 1px solid black;
     }
-    </style>
+
+    #btnSend {
+      display: block;
+    }
+  </style>
 </head>
+
 <body>
-    <div class="message-container">
-        <msg-component></msg-component>
-    </div>
-    <script src="./src/wix-chat.js"></script>
-    <script src="./src/timeago.js"></script>
+  <div class="test-app">
+    <textarea name="text" id="textArea" cols="30" rows="10"></textarea>
+    <button id="btnSend">Append Message</button>
+  </div>
+  <div class="message-container">
+    <msg-component></msg-component>
+  </div>
+  <script src="./src/wix-chat.js"></script>
+  <script src="./src/timeago.js"></script>
+
+  <script>
+    const $btnSend = document.querySelector("#btnSend");
+    const $textarea = document.querySelector("#textArea");
+    const $msgComponent = document.querySelector("msg-component");
+
+    const testObj = {
+      isOwner: false,
+      msg: "Hello world",
+      user: {
+        name: "Salman"
+      }
+    }
+    console.log({ $msgComponent })
+    $textarea.textContent = JSON.stringify(testObj, null, 4);
+
+    $btnSend.onclick = () => {
+      console.log("clicked! : ", $textarea.textContent);
+      $msgComponent.appendMsg = JSON.parse($textarea.value);
+    }
+
+  </script>
 </body>
+
 </html>

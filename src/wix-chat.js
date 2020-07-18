@@ -20,7 +20,8 @@ class MessagesComponent extends HTMLElement {
     this._messages = [];
 
     // selector
-    this.$container = this._shadowRoot.getElementById("msg-box");
+    this.$container = this._shadowRoot.querySelector(".container");
+    this.$messagesEl = this._shadowRoot.getElementById("msg-box");
     this.$typing = this._shadowRoot.querySelector(".typing");
     this.$btnLoadMore = this._shadowRoot.querySelector(".loadmore");
 
@@ -42,12 +43,12 @@ class MessagesComponent extends HTMLElement {
 
   }
   
-  // append the message html to $container
+  // append the message html to $messagesEl
   _renderMessage() {
-    this.$container.innerHTML = "";
+    this.$messagesEl.innerHTML = "";
     this._messages.forEach(msg => {
       let msgItem = this._formatMsgHTML(msg);
-      this.$container.innerHTML += msgItem;
+      this.$messagesEl.innerHTML += msgItem;
     });
     this.scrollToBottom();
   }
@@ -73,21 +74,21 @@ class MessagesComponent extends HTMLElement {
   set appendMsg(msg) {
     this._messages.push(msg);
     let msgItem = this._formatMsgHTML(msg);
-    this.$container.innerHTML += msgItem;
+    this.$messagesEl.innerHTML += msgItem;
     this.scrollToBottom();
   }
 
   set appendMsgs(msg) {
     this._messages.push(...msg);
     let msgItem = msg.map(_ => this._formatMsgHTML(_)).join("\n");
-    this.$container.innerHTML += msgItem;
+    this.$messagesEl.innerHTML += msgItem;
   }
 
   // Prepend Message Section
   set prependMsg(msg) {
     this._messages.unshift(msg);
     let msgItem = this._formatMsgHTML(msg);
-    this.$container.innerHTML = msgItem + this.$container.innerHTML;
+    this.$messagesEl.innerHTML = msgItem + this.$messagesEl.innerHTML;
     this.scrollToTop();
   }
 
@@ -95,14 +96,14 @@ class MessagesComponent extends HTMLElement {
     this._messages.unshift(...msg);
 
     let msgItems = msg.map(_ => this._formatMsgHTML(_)).join("\n");
-    this.$container.innerHTML = msgItems + this.$container.innerHTML;
+    this.$messagesEl.innerHTML = msgItems + this.$messagesEl.innerHTML;
     
   }
 
   // Utitlity method
   _updateTimeAgo() {
     this.interval = setInterval(() => {
-      Array.prototype.slice.call(this.$container.children).forEach(el => {
+      Array.prototype.slice.call(this.$messagesEl.children).forEach(el => {
         let timeAgoEl = el.children[1].children[0];
         let datetime = timeAgoEl.getAttribute("datetime");
         timeAgoEl.textContent = timeago.format(datetime);
@@ -111,15 +112,15 @@ class MessagesComponent extends HTMLElement {
   }
 
   scrollToBottom() {
-    this.$container.scrollTop = this.$container.scrollHeight;
-
-    // this.$container.scrollIntoView(false);
+    this.$container.scrollTop  = this.$container.scrollHeight;
+    // this.$messagesEl.scrollTop = this.$messagesEl.scrollHeight;
+    // this.$messagesEl.parentElement.scrollIntoView(false);
   }
 
   scrollToTop() {
-    this.$container.scrollTo(0, 0);
-
-    // this.$container.scrollIntoView(true);
+    this.$container.scrollTop  = 0;
+    // this.$messagesEl.scrollTo(0, 0);
+    // this.$messagesEl.parentElement.scrollIntoView(true);
   }
 
   showTyping(show = true) {
@@ -289,6 +290,9 @@ function get_global_css() {
     background-color: rgba(0,0,0,0);
     overflow: overlay;
     display: block;
+    width: 100%;
+    min-width: 600px;
+    max-width: 600px;
   }
   .message {
     width: 90%;
